@@ -44,12 +44,7 @@ const tasks = [
   { id: 'web', label: '互动网页', icon: Wand2 },
 ];
 
-const flowSteps = [
-  '情绪识别',
-  '任务识别',
-  '方案拆解',
-  '生成开工清单',
-];
+const flowSteps = ['情绪识别', '任务识别', '方案拆解', '生成开工清单'];
 
 const taskGuides = {
   ppt: {
@@ -126,11 +121,13 @@ function App() {
 
   useEffect(() => {
     if (step !== 4) return;
+
     setActiveFlow(0);
     const timers = flowSteps.map((_, index) =>
       window.setTimeout(() => setActiveFlow(index), index * 760)
     );
     const doneTimer = window.setTimeout(() => setStep(5), 3600);
+
     return () => {
       timers.forEach(window.clearTimeout);
       window.clearTimeout(doneTimer);
@@ -141,14 +138,6 @@ function App() {
     (step === 1 && emotion) ||
     (step === 2 && task) ||
     (step === 3 && stuckText.trim().length >= 2);
-
-  function nextStep() {
-    setStep((current) => Math.min(current + 1, 6));
-  }
-
-  function prevStep() {
-    setStep((current) => Math.max(current - 1, 0));
-  }
 
   function restart() {
     setStep(0);
@@ -161,11 +150,11 @@ function App() {
   return (
     <main className="app-shell">
       <Decor />
-      <section className="phone-frame" aria-label="开工疗愈站互动网页">
+      <section className={step === 0 ? 'stage home-stage' : 'stage'} aria-label="开工疗愈站互动网页">
         <TopBar step={step} />
 
         <div className="content-area">
-          {step === 0 && <Home onStart={nextStep} />}
+          {step === 0 && <Home onStart={() => setStep(1)} />}
           {step === 1 && (
             <ChoicePage
               eyebrow="第一步：听见状态"
@@ -222,8 +211,8 @@ function App() {
 
         {step > 0 && step < 5 && (
           <FooterNav
-            onBack={prevStep}
-            onNext={nextStep}
+            onBack={() => setStep((current) => Math.max(current - 1, 0))}
+            onNext={() => setStep((current) => Math.min(current + 1, 6))}
             nextDisabled={!canContinue}
             nextLabel={step === 3 ? '开始分析' : '下一步'}
           />
@@ -236,9 +225,12 @@ function App() {
 function Decor() {
   return (
     <>
-      <div className="halo halo-a" />
-      <div className="halo halo-b" />
-      <div className="grid-glow" />
+      <div className="soft-orb orb-orange" />
+      <div className="soft-orb orb-blue" />
+      <div className="soft-orb orb-purple" />
+      <div className="cloud cloud-one" />
+      <div className="cloud cloud-two" />
+      <div className="tech-grid" />
     </>
   );
 }
@@ -247,15 +239,12 @@ function TopBar({ step }) {
   return (
     <header className="top-bar">
       <div className="brand-chip">
-        <Sparkles size={16} />
-        <span>Qwen Study Agent</span>
+        <Sparkles size={15} />
+        <span>阿里云 × 千问大模型</span>
       </div>
       <div className="step-dots" aria-label={`当前第 ${step + 1} 步`}>
         {Array.from({ length: 7 }).map((_, index) => (
-          <span
-            key={index}
-            className={index <= step ? 'dot active' : 'dot'}
-          />
+          <span key={index} className={index <= step ? 'dot active' : 'dot'} />
         ))}
       </div>
     </header>
@@ -265,24 +254,31 @@ function TopBar({ step }) {
 function Home({ onStart }) {
   return (
     <div className="home page-enter">
-      <div className="hero-orbit" aria-hidden="true">
-        <div className="core">
-          <BrainCircuit size={54} />
+      <img className="official-logo" src="/aliyun-qwen-logo.png" alt="阿里云 × 千问大模型" />
+
+      <div className="hero-visual" aria-hidden="true">
+        <div className="hero-card card-left">
+          <span>情绪识别</span>
         </div>
-        <span className="orbit-dot dot-one" />
-        <span className="orbit-dot dot-two" />
-        <span className="orbit-dot dot-three" />
+        <div className="hero-card card-right">
+          <span>开工清单</span>
+        </div>
+        <div className="ai-core">
+          <BrainCircuit size={56} />
+        </div>
+        <div className="hero-ring ring-one" />
+        <div className="hero-ring ring-two" />
+        <span className="signal signal-a" />
+        <span className="signal signal-b" />
+        <span className="signal signal-c" />
       </div>
 
-      <img
-  className="official-logo"
-  src="/aliyun-qwen-logo.png"
-  alt="阿里云 × 千问大模型"
-/>
-      <p className="eyebrow">大广赛阿里云主题互动 H5</p>
+      <p className="eyebrow">第18届大广赛 · 阿里云主题互动 H5</p>
       <h1>开工疗愈站</h1>
-      <p className="slogan">千问陪你从卡住到开始</p>
-      <p className="support">不是替你完成，而是帮你开始</p>
+      <p className="slogan">不是替你完成，而是帮你开始</p>
+      <p className="support">
+        千问大模型陪你从焦虑、拖延和卡住中拆出第一步，把模糊任务变成今天就能行动的开工清单。
+      </p>
 
       <button className="primary-btn hero-btn" type="button" onClick={onStart}>
         <Rocket size={19} />
@@ -292,15 +288,7 @@ function Home({ onStart }) {
   );
 }
 
-function ChoicePage({
-  eyebrow,
-  title,
-  subtitle,
-  items,
-  selected,
-  onSelect,
-  compact = false,
-}) {
+function ChoicePage({ eyebrow, title, subtitle, items, selected, onSelect, compact = false }) {
   return (
     <div className="page-enter">
       <p className="eyebrow">{eyebrow}</p>
@@ -310,12 +298,11 @@ function ChoicePage({
       <div className={compact ? 'choice-grid compact' : 'choice-grid'}>
         {items.map((item) => {
           const Icon = item.icon;
-          const isSelected = selected === item.id;
           return (
             <button
               key={item.id}
               type="button"
-              className={isSelected ? 'choice-card selected' : 'choice-card'}
+              className={selected === item.id ? 'choice-card selected' : 'choice-card'}
               onClick={() => onSelect(item.id)}
             >
               <span className="choice-icon">
@@ -436,6 +423,10 @@ function ResultPage({ result, emotion, task, onShare }) {
         </ul>
       </section>
 
+      <p className="work-note">
+        本作品为第18届大广赛阿里云主题互动 H5，模拟千问大模型学习陪伴智能体工作流。
+      </p>
+
       <button className="primary-btn wide" type="button" onClick={onShare}>
         <Share2 size={18} />
         生成今日开工卡
@@ -477,20 +468,20 @@ function SharePage({ result, emotion, task, onRestart }) {
         </div>
         <footer>
           <span>开工疗愈站</span>
-          <span>Powered by Qwen workflow simulation</span>
+          <span>第18届大广赛阿里云主题互动 H5 · 千问工作流模拟</span>
         </footer>
       </article>
+
+      <p className="work-note share-note">
+        本作品为第18届大广赛阿里云主题互动 H5，模拟千问大模型学习陪伴智能体工作流。
+      </p>
 
       <div className="share-actions">
         <button className="secondary-btn" type="button" onClick={onRestart}>
           <RefreshCcw size={17} />
           再来一次
         </button>
-        <button
-          className="primary-btn"
-          type="button"
-          onClick={() => window.print()}
-        >
+        <button className="primary-btn" type="button" onClick={() => window.print()}>
           <Download size={17} />
           打印/保存
         </button>
@@ -506,12 +497,7 @@ function FooterNav({ onBack, onNext, nextDisabled, nextLabel }) {
         <ArrowLeft size={18} />
         返回
       </button>
-      <button
-        className="primary-btn"
-        type="button"
-        onClick={onNext}
-        disabled={nextDisabled}
-      >
+      <button className="primary-btn" type="button" onClick={onNext} disabled={nextDisabled}>
         {nextLabel}
         <ArrowRight size={18} />
       </button>
