@@ -1,0 +1,8 @@
+﻿.gitignore
+FILE_LIST.txt
+index.html
+package.json
+README.md
+src/main.jsx
+src/styles.css
+vite.config.js
