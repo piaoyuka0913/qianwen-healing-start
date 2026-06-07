@@ -274,6 +274,11 @@ function Home({ onStart }) {
         <span className="orbit-dot dot-three" />
       </div>
 
+      <img
+  className="official-logo"
+  src="/aliyun-qwen-logo.png"
+  alt="阿里云 × 千问大模型"
+/>
       <p className="eyebrow">大广赛阿里云主题互动 H5</p>
       <h1>开工疗愈站</h1>
       <p className="slogan">千问陪你从卡住到开始</p>
