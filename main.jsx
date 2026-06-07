@@ -24,6 +24,7 @@ import {
   Wand2,
 } from 'lucide-react';
 import './styles.css';
+import officialLogo from './aliyun-qwen-logo.png';
 
 const emotions = [
   { id: 'anxious', label: '焦虑', hint: '脑子很满，越想越慌', icon: CloudLightning },
@@ -254,7 +255,7 @@ function TopBar({ step }) {
 function Home({ onStart }) {
   return (
     <div className="home page-enter">
-      <img className="official-logo" src="/aliyun-qwen-logo.png" alt="阿里云 × 千问大模型" />
+<img className="official-logo" src={officialLogo} alt="阿里云 × 千问大模型" />
 
       <div className="hero-visual" aria-hidden="true">
         <div className="hero-card card-left">
