@@ -282,7 +282,7 @@ function Home({ onStart }) {
 
       <button className="primary-btn hero-btn" type="button" onClick={onStart}>
         <Rocket size={19} />
-        开始开工
+        开工
       </button>
     </div>
   );
