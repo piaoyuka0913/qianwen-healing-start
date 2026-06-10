@@ -1,3 +1,4 @@
+import logo from './aliyun-qwen-logo.png'
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
@@ -254,7 +255,7 @@ function TopBar({ step }) {
 function Home({ onStart }) {
   return (
     <div className="home page-enter">
-   <img className="official-logo" src="./aliyun-qwen-logo.png" />
+< img className="official-logo" src={logo} />
       
       <div className="hero-visual" aria-hidden="true">
         <div className="hero-card card-left">
