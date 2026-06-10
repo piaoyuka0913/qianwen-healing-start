@@ -24,7 +24,6 @@ import {
   Wand2,
 } from 'lucide-react';
 import './styles.css';
-import officialLogo from './aliyun-qwen-logo.png';
 
 const emotions = [
   { id: 'anxious', label: '焦虑', hint: '脑子很满，越想越慌', icon: CloudLightning },
@@ -255,7 +254,7 @@ function TopBar({ step }) {
 function Home({ onStart }) {
   return (
     <div className="home page-enter">
-<img className="official-logo" src={officialLogo} alt="阿里云 × 千问大模型" />
+      <img className="official-logo" src="/aliyun-qwen-logo.png" alt="阿里云 × 千问大模型" />
 
       <div className="hero-visual" aria-hidden="true">
         <div className="hero-card card-left">
@@ -274,16 +273,16 @@ function Home({ onStart }) {
         <span className="signal signal-c" />
       </div>
 
-      <p className="eyebrow">第18届大广赛 · 阿里云主题互动 H5</p>
+      <p className="eyebrow">阿里云 × 千问大模型 · 学习陪伴互动 H5</p>
       <h1>开工疗愈站</h1>
-      <p className="slogan">不是替你完成，而是帮你开始</p>
+      <p className="slogan">帮你跨过最难的开头</p>
       <p className="support">
         千问大模型陪你从焦虑、拖延和卡住中拆出第一步，把模糊任务变成今天就能行动的开工清单。
       </p>
 
       <button className="primary-btn hero-btn" type="button" onClick={onStart}>
         <Rocket size={19} />
-        开工
+        开始开工
       </button>
     </div>
   );
@@ -469,13 +468,11 @@ function SharePage({ result, emotion, task, onRestart }) {
         </div>
         <footer>
           <span>开工疗愈站</span>
-          <span>第18届大广赛阿里云主题互动 H5 · 千问工作流模拟</span>
+          <span>阿里云主题互动 H5 · 千问工作流模拟</span>
         </footer>
       </article>
 
-      <p className="work-note share-note">
-        本作品为第18届大广赛阿里云主题互动 H5，模拟千问大模型学习陪伴智能体工作流。
-      </p>
+     
 
       <div className="share-actions">
         <button className="secondary-btn" type="button" onClick={onRestart}>
