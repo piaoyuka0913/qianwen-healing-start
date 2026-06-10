@@ -423,9 +423,6 @@ function ResultPage({ result, emotion, task, onShare }) {
         </ul>
       </section>
 
-      <p className="work-note">
-        本作品为第18届大广赛阿里云主题互动 H5，模拟千问大模型学习陪伴智能体工作流。
-      </p>
 
       <button className="primary-btn wide" type="button" onClick={onShare}>
         <Share2 size={18} />
