@@ -240,7 +240,7 @@ function TopBar({ step }) {
     <header className="top-bar">
       <div className="brand-chip">
         <Sparkles size={15} />
-        <span>阿里云 × 千问大模型</span>
+       
       </div>
       <div className="step-dots" aria-label={`当前第 ${step + 1} 步`}>
         {Array.from({ length: 7 }).map((_, index) => (
@@ -353,7 +353,7 @@ function AnalysisPage({ activeFlow, emotion, task }) {
         <div className="scanner-ring" />
         <BrainCircuit size={58} />
       </div>
-      <p className="eyebrow">千问正在模拟工作流</p>
+      <p className="eyebrow">千问正在帮你</p>
       <h2>从情绪到行动，正在生成你的开工方案</h2>
       <div className="flow-list">
         {flowSteps.map((item, index) => (
