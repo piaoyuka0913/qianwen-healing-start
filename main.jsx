@@ -254,7 +254,7 @@ function TopBar({ step }) {
 function Home({ onStart }) {
   return (
     <div className="home page-enter">
-      <img className="official-logo" src="/aliyun-qwen-logo.png" alt="阿里云 × 千问大模型" />
+      <img className="official-logo" src="./aliyun-qwen-logo.png" alt="阿里云 × 千问大模型" />
 
       <div className="hero-visual" aria-hidden="true">
         <div className="hero-card card-left">
