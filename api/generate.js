@@ -23,14 +23,14 @@ export default async function handler(req, res) {
     }
 
     const body = parseBody(req.body);
-    const emotion = String(body.emotion || '').slice(0, 40);
-    const task = String(body.task || '').slice(0, 40);
-    const stuckText = String(body.stuckText || '').slice(0, 500);
+    const emotion = String(body.emotion || '').slice(0, 60);
+    const task = String(body.task || '').slice(0, 60);
+    const stuckText = String(body.stuckText || '').slice(0, 600);
 
     const userPrompt = [
-      `用户状态：${emotion || '未说明'}`,
-      `任务类型：${task || '未说明'}`,
-      `当前卡点：${stuckText || '用户暂时没有详细描述'}`,
+      `emotion: ${emotion || '未选择'}`,
+      `task: ${task || '未选择'}`,
+      `stuckText: ${stuckText || '用户暂时没有详细描述'}`,
       '',
       '请只返回 JSON，不要 Markdown，不要代码块。JSON 格式必须是：',
       '{',
@@ -74,7 +74,11 @@ export default async function handler(req, res) {
 
     return res.status(200).json(normalizeResult(parsed));
   } catch (error) {
-    return res.status(200).json(DEFAULT_RESULT);
+    return res.status(500).json({
+      error: 'Generate failed',
+      detail: error instanceof Error ? error.message : 'Unknown error',
+      fallback: DEFAULT_RESULT,
+    });
   }
 }
 
