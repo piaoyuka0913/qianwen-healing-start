@@ -655,3 +655,148 @@ textarea::placeholder {
   display: grid;
   width: 32px;
   height:
+
+  html,
+body {
+  overflow-x: hidden;
+}
+
+.app-shell {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+@media (max-width: 860px) {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    overflow-y: auto;
+  }
+
+  .app-shell {
+    width: 100%;
+    min-height: 100dvh;
+    padding: 0;
+    place-items: stretch;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .stage {
+    width: 100%;
+    min-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .content-area {
+    width: 100%;
+    min-width: 0;
+    padding: 16px 18px 92px;
+  }
+
+  .home {
+    min-height: auto;
+    padding: 18px 0 34px;
+  }
+}
+
+@media (max-width: 520px) {
+  .content-area {
+    align-items: start;
+    padding: 10px 16px 96px;
+  }
+
+  .home {
+    min-height: auto;
+    width: 100%;
+    padding-top: 8px;
+  }
+
+  .official-logo {
+    width: min(100%, 360px);
+    max-height: 96px;
+    margin-bottom: 18px;
+  }
+
+  .hero-visual {
+    width: 136px;
+    height: 136px;
+    margin-bottom: 18px;
+  }
+
+  .ai-core {
+    width: 82px;
+    height: 82px;
+    border-radius: 24px;
+  }
+
+  h1 {
+    font-size: 40px;
+  }
+
+  h2 {
+    font-size: 26px;
+    width: 100%;
+  }
+
+  .support,
+  .subtitle {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+  }
+
+  .slogan {
+    font-size: 22px;
+  }
+
+  .footer-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20;
+    gap: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.76);
+    backdrop-filter: blur(16px);
+  }
+
+  .footer-nav .primary-btn,
+  .footer-nav .ghost-btn {
+    flex: 1;
+    min-width: 0;
+    padding: 0 12px;
+  }
+
+  .result,
+  .input-page,
+  .analysis,
+  .share-page {
+    width: 100%;
+  }
+
+  .result-block,
+  .text-panel,
+  .tip-card,
+  .flow-item,
+  .share-card {
+    width: 100%;
+  }
+
+  .share-card-top,
+  .share-card footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
