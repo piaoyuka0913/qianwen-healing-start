@@ -450,8 +450,6 @@ function ResultPage({ result, emotion, task, resultSource, onShare }) {
         </ul>
       </section>
 
-      {resultSource && <p className="work-note">生成来源：{resultSource}</p>}
-
       <button className="primary-btn wide" type="button" onClick={onShare}>
         <Share2 size={18} />
         生成今日开工卡
