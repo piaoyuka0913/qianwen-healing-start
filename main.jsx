@@ -1,5 +1,5 @@
-import logo from './aliyun-qwen-logo.png'
-import React, { useEffect, useMemo, useState } from 'react';
+import logo from './aliyun-qwen-logo.png';
+import React, { useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   ArrowLeft,
@@ -112,33 +112,55 @@ function App() {
   const [task, setTask] = useState('');
   const [stuckText, setStuckText] = useState('');
   const [activeFlow, setActiveFlow] = useState(0);
+  const [generatedResult, setGeneratedResult] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const selectedEmotion = emotions.find((item) => item.id === emotion);
   const selectedTask = tasks.find((item) => item.id === task);
-  const result = useMemo(
+  const fallbackResult = useMemo(
     () => buildResult({ emotion, task, stuckText }),
     [emotion, task, stuckText]
   );
-
-  useEffect(() => {
-    if (step !== 4) return;
-
-    setActiveFlow(0);
-    const timers = flowSteps.map((_, index) =>
-      window.setTimeout(() => setActiveFlow(index), index * 760)
-    );
-    const doneTimer = window.setTimeout(() => setStep(5), 3600);
-
-    return () => {
-      timers.forEach(window.clearTimeout);
-      window.clearTimeout(doneTimer);
-    };
-  }, [step]);
+  const result = generatedResult || fallbackResult;
 
   const canContinue =
     (step === 1 && emotion) ||
     (step === 2 && task) ||
     (step === 3 && stuckText.trim().length >= 2);
+
+  async function startAnalysis() {
+    const fallback = buildResult({ emotion, task, stuckText });
+
+    setIsAnalyzing(true);
+    setGeneratedResult(null);
+    setActiveFlow(0);
+    setStep(4);
+
+    const timers = flowSteps.map((_, index) =>
+      window.setTimeout(() => setActiveFlow(index), index * 760)
+    );
+
+    try {
+      const [apiResult] = await Promise.all([
+        requestGeneratedResult({
+          emotion: selectedEmotion?.label || emotion,
+          task: selectedTask?.label || task,
+          stuckText,
+          fallback,
+        }),
+        wait(3600),
+      ]);
+
+      setGeneratedResult(apiResult);
+    } catch {
+      setGeneratedResult(fallback);
+    } finally {
+      timers.forEach(window.clearTimeout);
+      setActiveFlow(flowSteps.length - 1);
+      setIsAnalyzing(false);
+      setStep(5);
+    }
+  }
 
   function restart() {
     setStep(0);
@@ -146,6 +168,8 @@ function App() {
     setTask('');
     setStuckText('');
     setActiveFlow(0);
+    setGeneratedResult(null);
+    setIsAnalyzing(false);
   }
 
   return (
@@ -160,7 +184,7 @@ function App() {
             <ChoicePage
               eyebrow="第一步：听见状态"
               title="你现在更像哪一种卡住？"
-              subtitle="选择一个最接近的状态，千问会先理解情绪，再开始拆任务。"
+              subtitle="选择一个最接近的状态，先理解情绪，再开始拆任务。"
               items={emotions}
               selected={emotion}
               onSelect={setEmotion}
@@ -190,6 +214,7 @@ function App() {
               activeFlow={activeFlow}
               emotion={selectedEmotion}
               task={selectedTask}
+              isAnalyzing={isAnalyzing}
             />
           )}
           {step === 5 && (
@@ -213,8 +238,8 @@ function App() {
         {step > 0 && step < 5 && (
           <FooterNav
             onBack={() => setStep((current) => Math.max(current - 1, 0))}
-            onNext={() => setStep((current) => Math.min(current + 1, 6))}
-            nextDisabled={!canContinue}
+            onNext={step === 3 ? startAnalysis : () => setStep((current) => Math.min(current + 1, 6))}
+            nextDisabled={!canContinue || isAnalyzing}
             nextLabel={step === 3 ? '开始分析' : '下一步'}
           />
         )}
@@ -241,7 +266,6 @@ function TopBar({ step }) {
     <header className="top-bar">
       <div className="brand-chip">
         <Sparkles size={15} />
-       
       </div>
       <div className="step-dots" aria-label={`当前第 ${step + 1} 步`}>
         {Array.from({ length: 7 }).map((_, index) => (
@@ -255,8 +279,8 @@ function TopBar({ step }) {
 function Home({ onStart }) {
   return (
     <div className="home page-enter">
-< img className="official-logo" src={logo} />
-      
+      <img className="official-logo" src={logo} alt="阿里云 × 千问大模型" />
+
       <div className="hero-visual" aria-hidden="true">
         <div className="hero-card card-left">
           <span>情绪识别</span>
@@ -341,21 +365,21 @@ function InputPage({ emotion, task, value, onChange }) {
       </label>
       <div className="tip-card">
         <Sparkles size={18} />
-        <p>可以很短，也可以很乱。千问会先整理情绪，再把任务拆成能马上执行的小动作。</p>
+        <p>可以很短，也可以很乱。系统会先整理情绪，再把任务拆成能马上执行的小动作。</p>
       </div>
     </div>
   );
 }
 
-function AnalysisPage({ activeFlow, emotion, task }) {
+function AnalysisPage({ activeFlow, emotion, task, isAnalyzing }) {
   return (
     <div className="analysis page-enter">
       <div className="scanner">
         <div className="scanner-ring" />
         <BrainCircuit size={58} />
       </div>
-      <p className="eyebrow">千问正在帮你</p>
-      <h2>从情绪到行动，正在生成你的开工方案</h2>
+      <p className="eyebrow">正在帮你拆出第一步……</p>
+      <h2>{isAnalyzing ? '正在帮你拆出第一步……' : '从情绪到行动，正在生成你的开工方案'}</h2>
       <div className="flow-list">
         {flowSteps.map((item, index) => (
           <div
@@ -387,7 +411,7 @@ function ResultPage({ result, emotion, task, onShare }) {
   return (
     <div className="result page-enter">
       <p className="eyebrow">你的开工方案已生成</p>
-      <h2>{emotion?.label || '当前状态'}也可以开始一点点</h2>
+      <h2>{result.title || `${emotion?.label || '当前状态'}也可以开始一点点`}</h2>
 
       <section className="result-block healing">
         <h3>治愈回应</h3>
@@ -416,14 +440,13 @@ function ResultPage({ result, emotion, task, onShare }) {
       </section>
 
       <section className="result-block">
-        <h3>后续计划</h3>
+        <h3>后续提醒</h3>
         <ul className="plain-list">
           {result.later.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>
       </section>
-
 
       <button className="primary-btn wide" type="button" onClick={onShare}>
         <Share2 size={18} />
@@ -450,7 +473,7 @@ function SharePage({ result, emotion, task, onRestart }) {
           <span>{today}</span>
           <Sparkles size={18} />
         </div>
-        <h3>今天先开始 30 分钟</h3>
+        <h3>{result.title || '今天先开始 30 分钟'}</h3>
         <p className="quote">{result.action}</p>
         <div className="share-meta">
           <span>{emotion?.label || '状态'}</span>
@@ -469,8 +492,6 @@ function SharePage({ result, emotion, task, onRestart }) {
           <span>阿里云主题互动 H5 · 千问工作流模拟</span>
         </footer>
       </article>
-
-     
 
       <div className="share-actions">
         <button className="secondary-btn" type="button" onClick={onRestart}>
@@ -501,6 +522,43 @@ function FooterNav({ onBack, onNext, nextDisabled, nextLabel }) {
   );
 }
 
+async function requestGeneratedResult({ emotion, task, stuckText, fallback }) {
+  try {
+    const response = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ emotion, task, stuckText }),
+    });
+
+    if (!response.ok) {
+      throw new Error('API request failed');
+    }
+
+    const data = await response.json();
+    return normalizeApiResult(data, fallback);
+  } catch {
+    return fallback;
+  }
+}
+
+function normalizeApiResult(data, fallback) {
+  const steps = Array.isArray(data?.steps)
+    ? data.steps.map((item) => String(item).trim()).filter(Boolean)
+    : [];
+  const tips = Array.isArray(data?.tips)
+    ? data.tips.map((item) => String(item).trim()).filter(Boolean)
+    : [];
+
+  return {
+    title: typeof data?.title === 'string' && data.title.trim() ? data.title.trim() : fallback.title,
+    care: typeof data?.care === 'string' && data.care.trim() ? data.care.trim() : fallback.care,
+    blocks: fallback.blocks,
+    firstSteps: steps.length ? steps.slice(0, 4) : fallback.firstSteps,
+    later: tips.length ? tips.slice(0, 4) : fallback.later,
+    action: typeof data?.summary === 'string' && data.summary.trim() ? data.summary.trim() : fallback.action,
+  };
+}
+
 function buildResult({ emotion, task, stuckText }) {
   const guide = taskGuides[task] || taskGuides.web;
   const cleanText = stuckText.trim();
@@ -509,12 +567,17 @@ function buildResult({ emotion, task, stuckText }) {
     : '你已经完成了最难的一步：承认自己卡住，并愿意往前挪一点。';
 
   return {
+    title: '今天先开始30分钟',
     care: `${emotionCare[emotion] || emotionCare.lost} ${personalNote}`,
     action: emotionAction[emotion] || emotionAction.lost,
     blocks: guide.blocks,
     firstSteps: guide.firstSteps,
     later: guide.later,
   };
+}
+
+function wait(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
 createRoot(document.getElementById('root')).render(<App />);
