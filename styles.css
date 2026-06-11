@@ -15,8 +15,18 @@
 html,
 body,
 #root {
+  width: 100%;
   min-height: 100%;
   margin: 0;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  background: #fff8ef;
 }
 
 button,
@@ -31,9 +41,11 @@ button {
 .app-shell {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding: 28px;
   background:
     radial-gradient(circle at 15% 12%, rgba(255, 130, 46, 0.22), transparent 26%),
@@ -213,6 +225,7 @@ button {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -623,6 +636,7 @@ textarea::placeholder {
     opacity: 0.9;
     transform: scale(0.92);
   }
+
   100% {
     opacity: 0;
     transform: scale(1.18);
@@ -654,23 +668,227 @@ textarea::placeholder {
   grid-row: span 2;
   display: grid;
   width: 32px;
-  height:
-
-  html,
-body {
-  overflow-x: hidden;
+  height: 32px;
+  place-items: center;
+  border-radius: 12px;
+  color: #7a86a8;
+  background: rgba(116, 88, 190, 0.08);
+  font-weight: 900;
 }
 
-.app-shell {
-  overflow-x: hidden;
-  overflow-y: auto;
+.flow-item.active,
+.flow-item.done {
+  color: #17224d;
+  background: rgba(255, 255, 255, 0.88);
 }
 
-@media (max-width: 860px) {
+.flow-item.active > span,
+.flow-item.done > span {
+  color: white;
+  background: linear-gradient(135deg, #ff8a2c, #7658ff);
+}
+
+.flow-item small {
+  color: #65749b;
+}
+
+.result {
+  align-self: start;
+}
+
+.result-block {
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 14px 30px rgba(83, 67, 112, 0.08);
+}
+
+.result-block p {
+  margin-bottom: 0;
+  color: #536184;
+  line-height: 1.8;
+}
+
+.healing {
+  background:
+    radial-gradient(circle at 12% 14%, rgba(255, 138, 44, 0.14), transparent 28%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(250, 244, 255, 0.74));
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag-row span,
+.share-meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: #5b3c95;
+  background: rgba(118, 88, 255, 0.1);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.check-list,
+.plain-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.check-list {
+  display: grid;
+  gap: 10px;
+}
+
+.check-list li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  color: #364469;
+  line-height: 1.6;
+}
+
+.check-list span {
+  flex: 0 0 auto;
+  color: #f07a18;
+  font-weight: 900;
+}
+
+.plain-list {
+  display: grid;
+  gap: 9px;
+  color: #536184;
+  line-height: 1.7;
+}
+
+.plain-list li::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 8px;
+  border-radius: 999px;
+  background: #ff8a2c;
+  vertical-align: middle;
+}
+
+.work-note {
+  margin: 18px 0 0;
+  color: #7d89a8;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.result .wide {
+  margin-top: 18px;
+}
+
+.share-card {
+  width: min(100%, 500px);
+  margin-top: 16px;
+  padding: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 28px;
+  color: #17224d;
+  background:
+    radial-gradient(circle at 16% 18%, rgba(255, 138, 44, 0.2), transparent 28%),
+    radial-gradient(circle at 84% 8%, rgba(118, 88, 255, 0.16), transparent 30%),
+    linear-gradient(145deg, #fffaf2, #fffdf8 58%, #f5f0ff);
+  box-shadow: 0 22px 50px rgba(83, 67, 112, 0.13);
+  text-align: left;
+}
+
+.share-card-top,
+.share-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.share-card h3 {
+  margin: 34px 0 12px;
+  color: #17245c;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.quote {
+  color: #536184;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.share-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 22px 0;
+}
+
+.share-meta span {
+  color: #5b3c95;
+  background: rgba(118, 88, 255, 0.1);
+}
+
+.mini-plan {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 26px;
+}
+
+.mini-plan p {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  margin: 0;
+  padding: 12px;
+  border-radius: 16px;
+  color: #3e4d70;
+  background: rgba(255, 255, 255, 0.72);
+  line-height: 1.6;
+}
+
+.mini-plan strong {
+  color: #f07a18;
+}
+
+.share-card footer {
+  color: #7d89a8;
+  font-size: 12px;
+}
+
+.share-note {
+  max-width: 520px;
+  text-align: center;
+}
+
+.share-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.footer-nav {
+  border-top: 1px solid rgba(255, 255, 255, 0.58);
+  background: rgba(255, 255, 255, 0.34);
+}
+
+@media (max-width: 860px), (hover: none) and (pointer: coarse) {
   html,
   body,
   #root {
-    min-height: 100%;
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
   }
 
   body {
@@ -679,86 +897,158 @@ body {
 
   .app-shell {
     width: 100%;
+    min-width: 0;
     min-height: 100dvh;
+    display: block;
     padding: 0;
-    place-items: stretch;
     overflow-x: hidden;
     overflow-y: auto;
   }
 
   .stage {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     min-height: 100dvh;
     border: 0;
     border-radius: 0;
     overflow: visible;
   }
 
+  .top-bar,
+  .footer-nav {
+    width: 100%;
+    padding: 14px 16px;
+  }
+
   .content-area {
     width: 100%;
     min-width: 0;
-    padding: 16px 18px 92px;
+    padding: 10px 16px 104px;
+    overflow-x: hidden;
   }
 
-  .home {
-    min-height: auto;
-    padding: 18px 0 34px;
-  }
-}
-
-@media (max-width: 520px) {
-  .content-area {
-    align-items: start;
-    padding: 10px 16px 96px;
-  }
-
-  .home {
-    min-height: auto;
+  .page-enter,
+  .home,
+  .input-page,
+  .analysis,
+  .result,
+  .share-page {
     width: 100%;
-    padding-top: 8px;
+    min-width: 0;
+  }
+
+  .home {
+    min-height: auto;
+    padding: 8px 0 32px;
   }
 
   .official-logo {
-    width: min(100%, 360px);
-    max-height: 96px;
-    margin-bottom: 18px;
+    width: min(100%, 340px);
+    max-height: 92px;
+    margin-bottom: 16px;
   }
 
   .hero-visual {
-    width: 136px;
-    height: 136px;
-    margin-bottom: 18px;
+    width: 132px;
+    height: 132px;
+    margin-bottom: 16px;
   }
 
   .ai-core {
-    width: 82px;
-    height: 82px;
+    width: 80px;
+    height: 80px;
     border-radius: 24px;
   }
 
+  .hero-card {
+    display: none;
+  }
+
   h1 {
-    font-size: 40px;
+    font-size: 38px;
+    line-height: 1.08;
   }
 
   h2 {
-    font-size: 26px;
     width: 100%;
+    max-width: 100%;
+    font-size: 25px;
+    line-height: 1.22;
+    word-break: keep-all;
+  }
+
+  .eyebrow {
+    max-width: 100%;
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+  }
+
+  .slogan {
+    font-size: 21px;
   }
 
   .support,
   .subtitle {
+    width: 100%;
+    max-width: 100%;
     font-size: 15px;
     line-height: 1.65;
   }
 
-  .eyebrow {
-    font-size: 12px;
-    line-height: 1.5;
-    letter-spacing: 0.04em;
+  .choice-grid,
+  .choice-grid.compact {
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 20px;
   }
 
-  .slogan {
-    font-size: 22px;
+  .choice-card {
+    width: 100%;
+    min-width: 0;
+    min-height: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px;
+  }
+
+  .choice-card span:last-child {
+    min-width: 0;
+  }
+
+  .choice-card strong,
+  .choice-card small {
+    overflow-wrap: anywhere;
+  }
+
+  .text-panel,
+  .tip-card,
+  .flow-list,
+  .flow-item,
+  .result-block,
+  .share-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .share-card {
+    padding: 22px;
+  }
+
+  .share-card h3 {
+    font-size: 26px;
+  }
+
+  .share-card-top,
+  .share-card footer {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .footer-nav {
@@ -766,9 +1056,10 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 20;
+    z-index: 30;
     gap: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.76);
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.86);
     backdrop-filter: blur(16px);
   }
 
@@ -778,25 +1069,39 @@ body {
     min-width: 0;
     padding: 0 12px;
   }
+}
 
-  .result,
-  .input-page,
-  .analysis,
-  .share-page {
-    width: 100%;
+@media print {
+  body,
+  .app-shell {
+    background: white;
   }
 
-  .result-block,
-  .text-panel,
-  .tip-card,
-  .flow-item,
+  .app-shell {
+    min-height: auto;
+    padding: 0;
+  }
+
+  .stage {
+    min-height: auto;
+    border: 0;
+    box-shadow: none;
+    background: white;
+  }
+
+  .top-bar,
+  .share-page > .eyebrow,
+  .share-page > h2,
+  .share-actions {
+    display: none;
+  }
+
+  .content-area {
+    padding: 0;
+  }
+
   .share-card {
     width: 100%;
-  }
-
-  .share-card-top,
-  .share-card footer {
-    align-items: flex-start;
-    flex-direction: column;
+    box-shadow: none;
   }
 }
