@@ -113,6 +113,7 @@ function App() {
   const [stuckText, setStuckText] = useState('');
   const [activeFlow, setActiveFlow] = useState(0);
   const [generatedResult, setGeneratedResult] = useState(null);
+  const [resultSource, setResultSource] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const selectedEmotion = emotions.find((item) => item.id === emotion);
@@ -133,6 +134,7 @@ function App() {
 
     setIsAnalyzing(true);
     setGeneratedResult(null);
+    setResultSource('');
     setActiveFlow(0);
     setStep(4);
 
@@ -142,18 +144,16 @@ function App() {
 
     try {
       const [apiResult] = await Promise.all([
-        requestGeneratedResult({
-          emotion: selectedEmotion?.label || emotion,
-          task: selectedTask?.label || task,
-          stuckText,
-          fallback,
-        }),
+        requestGeneratedResult({ emotion, task, stuckText, fallback }),
         wait(3600),
       ]);
 
       setGeneratedResult(apiResult);
-    } catch {
+      setResultSource('DeepSeek API');
+    } catch (error) {
+      console.warn('API failed, fallback to local:', error);
       setGeneratedResult(fallback);
+      setResultSource('本地兜底');
     } finally {
       timers.forEach(window.clearTimeout);
       setActiveFlow(flowSteps.length - 1);
@@ -169,6 +169,7 @@ function App() {
     setStuckText('');
     setActiveFlow(0);
     setGeneratedResult(null);
+    setResultSource('');
     setIsAnalyzing(false);
   }
 
@@ -222,6 +223,7 @@ function App() {
               result={result}
               emotion={selectedEmotion}
               task={selectedTask}
+              resultSource={resultSource}
               onShare={() => setStep(6)}
             />
           )}
@@ -407,7 +409,7 @@ function AnalysisPage({ activeFlow, emotion, task, isAnalyzing }) {
   );
 }
 
-function ResultPage({ result, emotion, task, onShare }) {
+function ResultPage({ result, emotion, task, resultSource, onShare }) {
   return (
     <div className="result page-enter">
       <p className="eyebrow">你的开工方案已生成</p>
@@ -447,6 +449,8 @@ function ResultPage({ result, emotion, task, onShare }) {
           ))}
         </ul>
       </section>
+
+      {resultSource && <p className="work-note">生成来源：{resultSource}</p>}
 
       <button className="primary-btn wide" type="button" onClick={onShare}>
         <Share2 size={18} />
@@ -523,22 +527,22 @@ function FooterNav({ onBack, onNext, nextDisabled, nextLabel }) {
 }
 
 async function requestGeneratedResult({ emotion, task, stuckText, fallback }) {
-  try {
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ emotion, task, stuckText }),
-    });
+  const response = await fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      emotion,
+      task,
+      stuckText,
+    }),
+  });
 
-    if (!response.ok) {
-      throw new Error('API request failed');
-    }
-
-    const data = await response.json();
-    return normalizeApiResult(data, fallback);
-  } catch {
-    return fallback;
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status}`);
   }
+
+  const data = await response.json();
+  return normalizeApiResult(data, fallback);
 }
 
 function normalizeApiResult(data, fallback) {
